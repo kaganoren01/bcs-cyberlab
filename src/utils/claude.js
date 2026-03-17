@@ -1,6 +1,5 @@
-const API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY;
-
 export async function explainRecord(tableLabel, tableDescription, record) {
+  const API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY;
   if (!API_KEY) throw new Error('No API key set. Add VITE_ANTHROPIC_API_KEY to your .env.local file.');
 
   const response = await fetch('https://api.anthropic.com/v1/messages', {
