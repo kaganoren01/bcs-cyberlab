@@ -18,24 +18,26 @@ export default function TableView({ tableKey, table }) {
   const data = useMemo(() => transformRows(tableKey, rawData), [tableKey, rawData]);
 
   // Build sorted client options for the dropdown
+  // Build dropdown options deduped by name; each entry holds all matching IDs
   const clientOptions = useMemo(() => {
     if (!HAS_CLIENT_ID.has(tableKey)) return [];
-    const seen = new Set();
-    return [...clients]
-      .filter(c => {
-        const id = String(c.ClientID);
-        if (seen.has(id)) return false;
-        seen.add(id);
-        return true;
-      })
-      .sort((a, b) => String(a.ClientName).localeCompare(String(b.ClientName)))
-      .map(c => ({ id: String(c.ClientID), name: c.ClientName }));
+    const nameToIds = {};
+    clients.forEach(c => {
+      const name = c.ClientName || `Client ${c.ClientID}`;
+      if (!nameToIds[name]) nameToIds[name] = new Set();
+      nameToIds[name].add(String(c.ClientID));
+    });
+    return Object.entries(nameToIds)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([name, ids]) => ({ name, ids }));
   }, [tableKey, clients]);
 
   const filteredData = useMemo(() => {
     if (!clientFilter) return data;
-    return data.filter(row => String(row.ClientID) === clientFilter);
-  }, [data, clientFilter]);
+    const option = clientOptions.find(o => o.name === clientFilter);
+    if (!option) return data;
+    return data.filter(row => option.ids.has(String(row.ClientID)));
+  }, [data, clientFilter, clientOptions]);
 
   if (loading) return <div className="state-msg">Loading {table.label}...</div>;
   if (error)   return <div className="state-msg error">Error loading data: {error}</div>;
@@ -58,7 +60,7 @@ export default function TableView({ tableKey, table }) {
             >
               <option value="">All Clients</option>
               {clientOptions.map(c => (
-                <option key={c.id} value={c.id}>{c.name}</option>
+                <option key={c.name} value={c.name}>{c.name}</option>
               ))}
             </select>
           )}
