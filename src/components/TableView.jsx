@@ -20,7 +20,14 @@ export default function TableView({ tableKey, table }) {
   // Build sorted client options for the dropdown
   const clientOptions = useMemo(() => {
     if (!HAS_CLIENT_ID.has(tableKey)) return [];
+    const seen = new Set();
     return [...clients]
+      .filter(c => {
+        const id = String(c.ClientID);
+        if (seen.has(id)) return false;
+        seen.add(id);
+        return true;
+      })
       .sort((a, b) => String(a.ClientName).localeCompare(String(b.ClientName)))
       .map(c => ({ id: String(c.ClientID), name: c.ClientName }));
   }, [tableKey, clients]);
