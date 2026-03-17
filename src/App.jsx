@@ -3,9 +3,11 @@ import {
   LayoutDashboard, ShieldAlert, Bell, Bug,
   Ticket, Server, Link2, Users, Building2,
   FileText, Radio, GitMerge, UserCheck, ContactRound,
+  BarChart2,
 } from 'lucide-react';
 import { TABLES, PRIMARY_TABLES, REFERENCE_TABLES } from './utils/schema';
 import Dashboard from './components/Dashboard';
+import Analytics from './components/Analytics';
 import TableView from './components/TableView';
 import './App.css';
 
@@ -50,6 +52,13 @@ export default function App() {
             <LayoutDashboard size={15} className="nav-icon" />
             Dashboard
           </button>
+          <button
+            className={`nav-item nav-dashboard ${activeView === 'analytics' ? 'active' : ''}`}
+            onClick={() => setActiveView('analytics')}
+          >
+            <BarChart2 size={15} className="nav-icon" />
+            Analytics
+          </button>
 
           <div className="nav-divider" />
 
@@ -91,6 +100,8 @@ export default function App() {
         <main className="main-content">
           {activeView === 'dashboard'
             ? <Dashboard onNavigate={setActiveView} />
+            : activeView === 'analytics'
+            ? <Analytics />
             : <TableView key={activeView} tableKey={activeView} table={TABLES[activeView]} />}
         </main>
       </div>
