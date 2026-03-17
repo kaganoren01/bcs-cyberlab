@@ -29,6 +29,7 @@ export const TABLES = {
     primaryKey: 'TicketID',
     description: 'Support tickets linked to clients and incidents.',
     columns: ['TicketID','ClientID','IncidentID','TicketOpenedTime','TicketClosedTime','TicketPriority','TicketCurrentStatus','TicketTitle','TicketDescription'],
+    filterBy: { field: 'TicketCurrentStatus', label: 'Status' },
   },
   ASSET: {
     label: 'Assets',

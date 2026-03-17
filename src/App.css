@@ -136,6 +136,19 @@ body {
 .client-filter-select:focus { border-color: var(--blue); }
 .client-filter-select option { background: var(--bg2); }
 
+.clear-filter-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.clear-filter-btn:hover { border-color: var(--red); color: var(--red); }
+
 /* ── Table content split ── */
 .table-content { display: flex; flex: 1; overflow: hidden; }
 .table-content.with-panel .data-table-wrap { flex: 1; }
