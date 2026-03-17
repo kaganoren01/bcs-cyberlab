@@ -110,6 +110,32 @@ body {
   white-space: nowrap;
 }
 
+.table-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.client-filter-select {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 4px 28px 4px 10px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238b949e'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  max-width: 200px;
+}
+.client-filter-select:focus { border-color: var(--blue); }
+.client-filter-select option { background: var(--bg2); }
+
 /* ── Table content split ── */
 .table-content { display: flex; flex: 1; overflow: hidden; }
 .table-content.with-panel .data-table-wrap { flex: 1; }

@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Search } from 'lucide-react';
 import SeverityBadge, { BADGE_COLUMNS } from './SeverityBadge';
+import { getLabel } from '../utils/columnLabels';
 
 const PAGE_SIZE = 50;
 
@@ -51,7 +52,7 @@ export default function DataTable({ data, columns, primaryKey, onSelectRow }) {
         <table className="data-table">
           <thead>
             <tr>
-              {displayCols.map(col => <th key={col}>{col}</th>)}
+              {displayCols.map(col => <th key={col}>{getLabel(col)}</th>)}
               <th></th>
             </tr>
           </thead>

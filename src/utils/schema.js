@@ -49,7 +49,7 @@ export const TABLES = {
     file: '/data/ANALYST.csv',
     primaryKey: 'AnalystID',
     description: 'SOC analysts and their roles within the team.',
-    columns: ['AnalystID','AnalystFirstName','AnalystLastName','AnalystEmail','AnalystRole','AnalystStudentStatus','AnalystIsActive'],
+    columns: ['AnalystID','Name','AnalystEmail','AnalystRole','AnalystStudentStatus','AnalystIsActive'],
   },
   CLIENT: {
     label: 'Clients',
@@ -91,7 +91,7 @@ export const TABLES = {
     file: '/data/CLIENT_CONTACT.csv',
     primaryKey: 'ContactID',
     description: 'Points of contact at each client organization.',
-    columns: ['ContactID','ClientID','ContactFirstName','ContactLastName','ContactEmail','ContactPhone','ContactRoleTitle','IsPrimaryContact'],
+    columns: ['ContactID','ClientID','Name','ContactEmail','ContactPhone','ContactRoleTitle','IsPrimaryContact'],
   },
 };
 

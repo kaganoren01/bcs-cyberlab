@@ -4,6 +4,7 @@ import remarkGfm from 'remark-gfm';
 import { X, Sparkles, AlertCircle } from 'lucide-react';
 import { explainRecord } from '../utils/claude';
 import SeverityBadge, { BADGE_COLUMNS } from './SeverityBadge';
+import { getLabel } from '../utils/columnLabels';
 
 export default function RecordPanel({ record, tableLabel, tableDescription, onClose }) {
   const [explanation, setExplanation] = useState('');
@@ -36,7 +37,7 @@ export default function RecordPanel({ record, tableLabel, tableDescription, onCl
       <div className="record-fields">
         {Object.entries(record).map(([key, val]) => (
           <div key={key} className="record-field">
-            <span className="field-key">{key}</span>
+            <span className="field-key">{getLabel(key)}</span>
             <span className="field-val">
               {BADGE_COLUMNS.has(key)
                 ? <SeverityBadge value={val} />
