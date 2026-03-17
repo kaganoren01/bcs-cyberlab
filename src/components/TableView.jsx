@@ -13,7 +13,7 @@ export default function TableView({ tableKey, table }) {
 
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [clientFilter, setClientFilter] = useState('');
-  const [fieldFilter, setFieldFilter] = useState('');
+  const [fieldFilters, setFieldFilters] = useState({});
 
   const data = useMemo(() => transformRows(tableKey, rawData), [tableKey, rawData]);
 
@@ -31,12 +31,14 @@ export default function TableView({ tableKey, table }) {
       .map(([name, ids]) => ({ name, ids }));
   }, [tableKey, clients]);
 
-  // Secondary field filter (e.g. Status for Tickets) — distinct values from data
-  const fieldOptions = useMemo(() => {
-    if (!table.filterBy) return [];
-    const vals = new Set(data.map(row => row[table.filterBy.field]).filter(Boolean));
-    return [...vals].sort();
-  }, [data, table.filterBy]);
+  // Secondary field filters — distinct values per configured field
+  const filterDefs = table.filterBy ?? [];
+  const fieldOptions = useMemo(() =>
+    filterDefs.map(({ field }) => {
+      const vals = new Set(data.map(row => row[field]).filter(Boolean));
+      return [...vals].sort();
+    }),
+  [data, filterDefs]);
 
   const filteredData = useMemo(() => {
     let rows = data;
@@ -44,20 +46,23 @@ export default function TableView({ tableKey, table }) {
       const option = clientOptions.find(o => o.name === clientFilter);
       if (option) rows = rows.filter(row => option.ids.has(String(row.ClientID)));
     }
-    if (fieldFilter && table.filterBy) {
-      rows = rows.filter(row => row[table.filterBy.field] === fieldFilter);
-    }
+    filterDefs.forEach(({ field }) => {
+      const val = fieldFilters[field];
+      if (val) rows = rows.filter(row => row[field] === val);
+    });
     return rows;
-  }, [data, clientFilter, clientOptions, fieldFilter, table.filterBy]);
+  }, [data, clientFilter, clientOptions, fieldFilters, filterDefs]);
 
   if (loading) return <div className="state-msg">Loading {table.label}...</div>;
   if (error)   return <div className="state-msg error">Error loading data: {error}</div>;
 
   function resetFilters() {
     setClientFilter('');
-    setFieldFilter('');
+    setFieldFilters({});
     setSelectedRecord(null);
   }
+
+  const hasActiveFilter = clientFilter || Object.values(fieldFilters).some(Boolean);
 
   return (
     <div className="table-view">
@@ -79,19 +84,20 @@ export default function TableView({ tableKey, table }) {
               ))}
             </select>
           )}
-          {table.filterBy && fieldOptions.length > 0 && (
+          {filterDefs.map((def, i) => fieldOptions[i]?.length > 0 && (
             <select
+              key={def.field}
               className="client-filter-select"
-              value={fieldFilter}
-              onChange={e => { setFieldFilter(e.target.value); setSelectedRecord(null); }}
+              value={fieldFilters[def.field] ?? ''}
+              onChange={e => { setFieldFilters(prev => ({ ...prev, [def.field]: e.target.value })); setSelectedRecord(null); }}
             >
-              <option value="">All {table.filterBy.label}es</option>
-              {fieldOptions.map(val => (
+              <option value="">All {def.label}s</option>
+              {fieldOptions[i].map(val => (
                 <option key={val} value={val}>{val}</option>
               ))}
             </select>
-          )}
-          {(clientFilter || fieldFilter) && (
+          ))}
+          {hasActiveFilter && (
             <button className="clear-filter-btn" onClick={resetFilters}>Clear ✕</button>
           )}
           <span className="badge">{filteredData.length.toLocaleString()} rows</span>

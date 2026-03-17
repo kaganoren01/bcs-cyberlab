@@ -29,7 +29,7 @@ export const TABLES = {
     primaryKey: 'TicketID',
     description: 'Support tickets linked to clients and incidents.',
     columns: ['TicketID','ClientID','IncidentID','TicketOpenedTime','TicketClosedTime','TicketPriority','TicketCurrentStatus','TicketTitle','TicketDescription'],
-    filterBy: { field: 'TicketCurrentStatus', label: 'Status' },
+    filterBy: [{ field: 'TicketCurrentStatus', label: 'Status' }],
   },
   ASSET: {
     label: 'Assets',
@@ -37,6 +37,10 @@ export const TABLES = {
     primaryKey: 'AssetID',
     description: 'Client-owned assets being monitored and protected.',
     columns: ['AssetID','ClientID','AssetName','AssetType','AssetEnvironment','AssetBusinessCriticality','AssetIPAddressOrHostname','AssetStatus'],
+    filterBy: [
+      { field: 'AssetBusinessCriticality', label: 'Criticality' },
+      { field: 'AssetStatus',              label: 'Status'      },
+    ],
   },
   ASSET_VULNERABILITY: {
     label: 'Asset Vulnerabilities',
