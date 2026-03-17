@@ -3,12 +3,14 @@ import {
   LayoutDashboard, ShieldAlert, Bell, Bug,
   Ticket, Server, Link2, Users, Building2,
   FileText, Radio, GitMerge, UserCheck, ContactRound,
-  BarChart2,
+  BarChart2, LogOut,
 } from 'lucide-react';
 import { TABLES, PRIMARY_TABLES, REFERENCE_TABLES } from './utils/schema';
 import Dashboard from './components/Dashboard';
 import Analytics from './components/Analytics';
 import TableView from './components/TableView';
+import LoginPage from './components/LoginPage';
+import { useAuth } from './hooks/useAuth';
 import './App.css';
 
 const TABLE_ICONS = {
@@ -28,7 +30,10 @@ const TABLE_ICONS = {
 };
 
 export default function App() {
+  const { isAuthenticated, email, login, logout } = useAuth();
   const [activeView, setActiveView] = useState('dashboard');
+
+  if (!isAuthenticated) return <LoginPage onLogin={login} />;
 
   return (
     <div className="app">
@@ -40,6 +45,12 @@ export default function App() {
             <span className="logo-bracket">]</span>
           </button>
           <p className="header-sub">MSSP Cybersecurity Operations Training Dataset</p>
+        </div>
+        <div className="header-user">
+          <span className="header-email">{email}</span>
+          <button className="logout-btn" onClick={logout} title="Sign out">
+            <LogOut size={14} /> Sign out
+          </button>
         </div>
       </header>
 
