@@ -12,7 +12,7 @@ import TableSkeleton from './TableSkeleton';
 const SOURCES = [
   { name: 'NIST SP 800-61 Rev. 3', url: 'https://www.nist.gov/publications/computer-security-incident-handling-guide' },
   { name: 'SANS Incident Response Lifecycle' },
-  { name: 'PagerDuty MTTA/MTTR Benchmarks', url: 'https://www.pagerduty.com/resources/learn/mttr/' },
+  { name: 'MTTA/MTTR Incident Management KPIs', url: 'https://taskcallapp.com/blog/incident-management-kpis-metrics-that-matter' },
 ];
 
 export default function AnalyticsResponseSLA() {
