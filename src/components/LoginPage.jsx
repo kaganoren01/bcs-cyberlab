@@ -20,7 +20,8 @@ function getResetParams() {
 }
 
 export default function LoginPage({ onLogin }) {
-  const resetParams = getResetParams();
+  // Capture reset params once at mount and store in state — URL gets cleared after
+  const [resetParams] = useState(() => getResetParams());
 
   // mode: 'login' | 'signup' | 'forgot' | 'reset'
   const [mode, setMode] = useState(resetParams ? 'reset' : 'login');
@@ -31,7 +32,7 @@ export default function LoginPage({ onLogin }) {
   const [success, setSuccess]   = useState('');
   const [loading, setLoading]   = useState(false);
 
-  // Clear URL params once we're in reset mode so they don't persist
+  // Clear URL params so the token isn't visible or reusable from the address bar
   useEffect(() => {
     if (resetParams) {
       window.history.replaceState({}, '', window.location.pathname);
