@@ -12,6 +12,7 @@ import {
   calcSLACompliance,
   calcMiscStats,
 } from '../utils/analytics';
+import FinancialImpact from './FinancialImpact';
 
 const SEV_COLORS = { Critical: '#f85149', High: '#e3932a', Medium: '#d29922', Low: '#3fb950' };
 const BAR_COLORS = ['#58a6ff', '#bc8cff', '#3fb950', '#d29922', '#f85149'];
@@ -263,6 +264,9 @@ export default function Analytics() {
           </div>
         </div>
       </section>
+
+      {/* ── Financial Impact ── */}
+      <FinancialImpact />
 
     </div>
   );
