@@ -16,8 +16,10 @@ export default function RecordPanel({ record, tableLabel, tableDescription, onCl
     setError('');
     setExplanation('');
     try {
-      const text = await explainRecord(tableLabel, tableDescription, record);
-      setExplanation(text);
+      await explainRecord(tableLabel, tableDescription, record, (chunk) => {
+        setLoading(false); // hide spinner as soon as first chunk arrives
+        setExplanation(prev => prev + chunk);
+      });
     } catch (e) {
       setError(e.message);
     } finally {
