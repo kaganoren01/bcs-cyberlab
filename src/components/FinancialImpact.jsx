@@ -85,7 +85,7 @@ export default function FinancialImpact() {
           These are <strong>estimated figures</strong> based on industry benchmark rates, not
           realized dollar amounts. Methodology inspired by{' '}
           <a
-            href="https://www.splunk.com/en_us/blog/security/risk-based-alerting.html"
+            href="https://www.splunk.com/en_us/blog/security/how-splunk-soar-is-helping-organizations-achieve-a-more-resilient-approach-to-security.html"
             target="_blank"
             rel="noopener noreferrer"
           >

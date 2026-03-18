@@ -7,7 +7,7 @@ import { SectionHeader, MetricCard, TopNTable, RefBanner } from './AnalyticsShar
 import TableSkeleton from './TableSkeleton';
 
 const SOURCES = [
-  { name: 'Splunk SOAR Risk-Based Alerting', url: 'https://www.splunk.com/en_us/blog/security/risk-based-alerting.html' },
+  { name: 'Splunk SOAR Risk-Based Alerting', url: 'https://www.splunk.com/en_us/blog/security/the-new-improved-splunk-guide-to-risk-based-alerting.html' },
   { name: 'Gartner SOC Visibility Triad' },
   { name: 'MITRE ATT&CK Framework', url: 'https://attack.mitre.org/' },
 ];
