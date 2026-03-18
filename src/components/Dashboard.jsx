@@ -102,7 +102,7 @@ export default function Dashboard({ onNavigate }) {
         <div className="dash-hero-inner">
           <div className="dash-badge">Cybersecurity Operations</div>
           <h1 className="dash-title">
-            <span className="dash-title-accent">BCS</span> CyberLab
+            <span className="dash-title-accent">Cyber</span> Dataset Analytics
           </h1>
           <p className="dash-subtitle">
             An interactive training dataset from a Managed Security Service Provider (MSSP).

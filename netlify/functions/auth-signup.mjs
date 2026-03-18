@@ -1,7 +1,23 @@
 import { neon } from '@netlify/neon';
 import bcrypt from 'bcryptjs';
 
-const ALLOWED_DOMAINS = ['bruins.belmont.edu', 'belmont.edu'];
+const DEFAULT_DOMAINS = ['bruins.belmont.edu', 'belmont.edu'];
+
+async function getAllowedDomains(sql) {
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS settings (
+        key VARCHAR(100) PRIMARY KEY,
+        value TEXT NOT NULL,
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+      )
+    `;
+    const rows = await sql`SELECT value FROM settings WHERE key = 'allowed_domains'`;
+    return rows.length > 0 ? JSON.parse(rows[0].value) : DEFAULT_DOMAINS;
+  } catch {
+    return DEFAULT_DOMAINS;
+  }
+}
 
 export const handler = async (event) => {
   if (event.httpMethod !== 'POST') {
@@ -18,10 +34,15 @@ export const handler = async (event) => {
   email = email?.toLowerCase().trim();
   const domain = email?.split('@')[1];
 
-  if (!domain || !ALLOWED_DOMAINS.includes(domain)) {
+  const sql = neon();
+  const allowedDomains = await getAllowedDomains(sql);
+
+  const isOpen = allowedDomains.includes('*');
+  if (!isOpen && (!domain || !allowedDomains.includes(domain))) {
+    const domainList = allowedDomains.map(d => `@${d}`).join(' or ');
     return {
       statusCode: 403,
-      body: JSON.stringify({ error: 'Only @bruins.belmont.edu or @belmont.edu email addresses are allowed.' }),
+      body: JSON.stringify({ error: `Only ${domainList} email addresses are allowed.` }),
     };
   }
 
@@ -31,8 +52,6 @@ export const handler = async (event) => {
       body: JSON.stringify({ error: 'Password must be at least 8 characters.' }),
     };
   }
-
-  const sql = neon();
 
   // Ensure users table exists
   await sql`

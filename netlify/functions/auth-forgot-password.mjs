@@ -56,12 +56,12 @@ export const handler = async (event) => {
   });
 
   await transporter.sendMail({
-    from: `BCS CyberLab <${process.env.GMAIL_USER}>`,
+    from: `Cyber Dataset Analytics <${process.env.GMAIL_USER}>`,
     to: email,
-    subject: 'Reset your BCS CyberLab password',
+    subject: 'Reset your CDA password',
     html: `
       <div style="font-family: monospace; background: #0d1117; color: #e6edf3; padding: 32px; max-width: 480px; border-radius: 8px;">
-        <h2 style="color: #3fb950; margin-top: 0;">[BCS CyberLab]</h2>
+        <h2 style="color: #3fb950; margin-top: 0;">[CDA] Cyber Dataset Analytics</h2>
         <p>You requested a password reset. Click the link below to set a new password:</p>
         <a href="${resetUrl}"
            style="display: inline-block; background: #238636; color: #fff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; margin: 16px 0;">

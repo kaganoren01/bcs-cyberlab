@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import { ShieldAlert, Mail, Lock, Loader, ArrowLeft } from 'lucide-react';
 
-const ALLOWED_DOMAINS = ['bruins.belmont.edu', 'belmont.edu'];
-
-function validateEmail(email) {
+function validateEmail(email, allowedDomains, isOpen) {
+  if (isOpen) return null;
   const domain = email.split('@')[1]?.toLowerCase();
-  if (!domain || !ALLOWED_DOMAINS.includes(domain)) {
-    return 'Only @bruins.belmont.edu or @belmont.edu email addresses are allowed.';
+  if (!domain || !allowedDomains.includes(domain)) {
+    return `Only ${allowedDomains.map(d => '@' + d).join(' or ')} email addresses are allowed.`;
   }
   return null;
 }
@@ -20,8 +19,19 @@ function getResetParams() {
 }
 
 export default function LoginPage({ onLogin }) {
-  // Capture reset params once at mount and store in state — URL gets cleared after
   const [resetParams] = useState(() => getResetParams());
+  const [allowedDomains, setAllowedDomains] = useState(['bruins.belmont.edu', 'belmont.edu']);
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    fetch('/.netlify/functions/settings-get')
+      .then(r => r.json())
+      .then(data => {
+        setIsOpen(data.isOpen);
+        if (!data.isOpen) setAllowedDomains(data.allowedDomains ?? []);
+      })
+      .catch(() => {}); // fall back to defaults silently
+  }, []);
 
   // mode: 'login' | 'signup' | 'forgot' | 'reset'
   const [mode, setMode] = useState(resetParams ? 'reset' : 'login');
@@ -54,7 +64,7 @@ export default function LoginPage({ onLogin }) {
     setSuccess('');
 
     if (mode === 'forgot') {
-      const emailErr = validateEmail(email);
+      const emailErr = validateEmail(email, allowedDomains, isOpen);
       if (emailErr) { setError(emailErr); return; }
 
       setLoading(true);
@@ -99,7 +109,7 @@ export default function LoginPage({ onLogin }) {
     }
 
     // login / signup
-    const emailErr = validateEmail(email);
+    const emailErr = validateEmail(email, allowedDomains, isOpen);
     if (emailErr) { setError(emailErr); return; }
     if (password.length < 8) { setError('Password must be at least 8 characters.'); return; }
     if (mode === 'signup' && password !== confirm) { setError('Passwords do not match.'); return; }
@@ -159,9 +169,9 @@ export default function LoginPage({ onLogin }) {
           <ShieldAlert size={32} className="login-logo-icon" />
           <div>
             <div className="login-title">
-              <span className="logo-bracket">[</span>BCS CyberLab<span className="logo-bracket">]</span>
+              <span className="logo-bracket">[</span>CDA<span className="logo-bracket">]</span>
             </div>
-            <div className="login-subtitle">Cybersecurity Operations Training</div>
+            <div className="login-subtitle">Cyber Dataset Analytics</div>
           </div>
         </div>
 
@@ -267,9 +277,16 @@ export default function LoginPage({ onLogin }) {
           )}
         </form>
 
-        <p className="login-restriction">
-          Access restricted to <strong>@bruins.belmont.edu</strong> and <strong>@belmont.edu</strong> accounts.
-        </p>
+        {!isOpen && allowedDomains.length > 0 && (
+          <p className="login-restriction">
+            Access restricted to {allowedDomains.map((d, i) => (
+              <span key={d}>
+                {i > 0 && (i === allowedDomains.length - 1 ? ' and ' : ', ')}
+                <strong>@{d}</strong>
+              </span>
+            ))} accounts.
+          </p>
+        )}
       </div>
     </div>
   );

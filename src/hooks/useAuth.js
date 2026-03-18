@@ -30,6 +30,8 @@ export function useAuth() {
       : null
   );
 
+  const isAdmin = !!token && !!(decodeJWT(token)?.isAdmin);
+
   function login(newToken, newEmail) {
     localStorage.setItem(TOKEN_KEY, newToken);
     localStorage.setItem(EMAIL_KEY, newEmail);
@@ -44,5 +46,5 @@ export function useAuth() {
     setEmail(null);
   }
 
-  return { isAuthenticated: !!token, email, login, logout };
+  return { isAuthenticated: !!token, email, isAdmin, token, login, logout };
 }

@@ -3,13 +3,14 @@ import {
   LayoutDashboard, ShieldAlert, Bell, Bug,
   Ticket, Server, Link2, Users, Building2,
   FileText, Radio, GitMerge, UserCheck, ContactRound,
-  BarChart2, LogOut,
+  BarChart2, LogOut, Settings,
 } from 'lucide-react';
 import { TABLES, PRIMARY_TABLES, REFERENCE_TABLES } from './utils/schema';
 import Dashboard from './components/Dashboard';
 import Analytics from './components/Analytics';
 import TableView from './components/TableView';
 import LoginPage from './components/LoginPage';
+import AdminPanel from './components/AdminPanel';
 import { useAuth } from './hooks/useAuth';
 import './App.css';
 
@@ -30,24 +31,31 @@ const TABLE_ICONS = {
 };
 
 export default function App() {
-  const { isAuthenticated, email, login, logout } = useAuth();
+  const { isAuthenticated, email, isAdmin, token, login, logout } = useAuth();
   const [activeView, setActiveView] = useState('dashboard');
+  const [showAdmin, setShowAdmin] = useState(false);
 
   if (!isAuthenticated) return <LoginPage onLogin={login} />;
 
   return (
     <div className="app">
+      {showAdmin && <AdminPanel token={token} onClose={() => setShowAdmin(false)} />}
       <header className="app-header">
         <div className="header-inner">
           <button className="logo" onClick={() => setActiveView('dashboard')}>
             <span className="logo-bracket">[</span>
-            BCS CyberLab
+            CDA
             <span className="logo-bracket">]</span>
           </button>
-          <p className="header-sub">MSSP Cybersecurity Operations Training Dataset</p>
+          <p className="header-sub">Cyber Dataset Analytics — MSSP Operations Training</p>
         </div>
         <div className="header-user">
           <span className="header-email">{email}</span>
+          {isAdmin && (
+            <button className="admin-btn" onClick={() => setShowAdmin(true)} title="Admin Settings">
+              <Settings size={14} />
+            </button>
+          )}
           <button className="logout-btn" onClick={logout} title="Sign out">
             <LogOut size={14} /> Sign out
           </button>

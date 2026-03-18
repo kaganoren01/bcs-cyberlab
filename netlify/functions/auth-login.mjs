@@ -36,14 +36,25 @@ export const handler = async (event) => {
     return { statusCode: 500, body: JSON.stringify({ error: 'Server misconfiguration: JWT_SECRET not set.' }) };
   }
 
+  const adminEmail = process.env.ADMIN_EMAIL?.toLowerCase().trim();
+  const isAdmin = !!adminEmail && user.email === adminEmail;
+
+  // Persist admin status in DB if not already set
+  if (isAdmin) {
+    try {
+      await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT FALSE`;
+      await sql`UPDATE users SET is_admin = TRUE WHERE email = ${user.email}`;
+    } catch { /* non-fatal */ }
+  }
+
   const token = jwt.sign(
-    { userId: user.id, email: user.email },
+    { userId: user.id, email: user.email, isAdmin },
     secret,
     { expiresIn: '7d' }
   );
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ token, email: user.email }),
+    body: JSON.stringify({ token, email: user.email, isAdmin }),
   };
 };
