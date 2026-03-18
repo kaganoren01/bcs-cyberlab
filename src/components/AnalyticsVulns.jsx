@@ -7,7 +7,7 @@ import { SEV_COLORS, SectionHeader, MetricCard, RefBanner } from './AnalyticsSha
 import TableSkeleton from './TableSkeleton';
 
 const SOURCES = [
-  { name: 'Tenable Vulnerability Management', url: 'https://www.tenable.com/products/tenable-vulnerability-management' },
+  { name: 'Tenable Vulnerability Management', url: 'https://www.tenable.com/products/vulnerability-management' },
   { name: 'NIST National Vulnerability Database', url: 'https://nvd.nist.gov/' },
   { name: 'Ponemon Institute Vulnerability Research', url: 'https://www.ponemon.org/' },
 ];
