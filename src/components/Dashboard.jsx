@@ -88,10 +88,10 @@ export default function Dashboard({ onNavigate }) {
   ];
 
   const features = [
-    { icon: Database,  title: 'Real Operational Data',  desc: '13 relational tables modeled after a real MSSP environment — incidents, tickets, SLAs, assets, vulnerabilities, and more.' },
-    { icon: Brain,     title: 'AI-Powered Explanations', desc: 'Click any record and get an instant explanation from Claude AI written for cybersecurity students and analysts.' },
-    { icon: BarChart2, title: 'Live Data Exploration',   desc: 'Search, filter, and paginate across 100k+ rows of anonymized security operations data — no setup required.' },
-    { icon: BookOpen,  title: 'SOC & IR Training',       desc: 'Designed to teach incident response workflow, vulnerability management, SLA compliance, and analyst triage.' },
+    { icon: Database,  title: 'Real Operational Data',  desc: 'Sourced from a working MSSP and anonymized. Same schema, same relationships, same chaos you\'d see on day one of a SOC job.' },
+    { icon: Brain,     title: 'Ask AI What It Means',    desc: 'Click any record and get a plain-English breakdown — what an analyst would care about, what action it calls for, what\'s suspicious.' },
+    { icon: BarChart2, title: 'Filter, Search, Explore', desc: 'Client filters, status dropdowns, full-text search across every column. No setup, no SQL required.' },
+    { icon: BookOpen,  title: 'Learn by Doing',          desc: 'Incident triage, vulnerability prioritization, SLA tracking, analyst workload — the stuff interviews ask about, in actual data.' },
   ];
 
   return (
@@ -100,13 +100,14 @@ export default function Dashboard({ onNavigate }) {
       {/* Hero */}
       <div className="dash-hero">
         <div className="dash-hero-inner">
-          <div className="dash-badge">Cybersecurity Operations</div>
+          <div className="dash-badge">Real MSSP Data. No Textbook Fluff.</div>
           <h1 className="dash-title">
             <span className="dash-title-accent">Cyber</span> Dataset Analytics
           </h1>
           <p className="dash-subtitle">
-            An interactive training dataset from a Managed Security Service Provider (MSSP).
-            Explore real-world security operations data and use AI to learn what it all means.
+            13 tables. 100k+ rows. One MSSP's worth of real incidents, tickets, vulnerabilities,
+            and SLA commitments — fully anonymized, fully explorable, and explained by AI when
+            you need it.
           </p>
           <div className="dash-cta-row">
             <button className="dash-cta-primary" onClick={() => onNavigate('INCIDENT')}>

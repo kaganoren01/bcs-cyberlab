@@ -1,9 +1,11 @@
 import { useState, useMemo } from 'react';
+import { AlertTriangle } from 'lucide-react';
 import { useTableData } from '../hooks/useTableData';
 import { transformRows } from '../utils/columnLabels';
 import { TABLES } from '../utils/schema';
 import DataTable from './DataTable';
 import RecordPanel from './RecordPanel';
+import TableSkeleton from './TableSkeleton';
 
 const HAS_CLIENT_ID = new Set(['INCIDENT', 'TICKET', 'ASSET', 'SLA_CONTRACT', 'CLIENT_CONTACT']);
 
@@ -53,8 +55,14 @@ export default function TableView({ tableKey, table }) {
     return rows;
   }, [data, clientFilter, clientOptions, fieldFilters, filterDefs]);
 
-  if (loading) return <div className="state-msg">Loading {table.label}...</div>;
-  if (error)   return <div className="state-msg error">Error loading data: {error}</div>;
+  if (loading) return <TableSkeleton label={table.label} />;
+  if (error) return (
+    <div className="empty-state">
+      <AlertTriangle size={32} className="empty-icon" style={{ color: 'var(--red)' }} />
+      <div className="empty-title">Failed to load {table.label}</div>
+      <div className="empty-desc">{error}</div>
+    </div>
+  );
 
   function resetFilters() {
     setClientFilter('');

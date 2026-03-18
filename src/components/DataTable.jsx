@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Search } from 'lucide-react';
+import { Search, SearchX } from 'lucide-react';
 import SeverityBadge, { BADGE_COLUMNS } from './SeverityBadge';
 import { getLabel } from '../utils/columnLabels';
 
@@ -57,6 +57,19 @@ export default function DataTable({ data, columns, primaryKey, onSelectRow }) {
             </tr>
           </thead>
           <tbody>
+            {pageData.length === 0 && (
+              <tr>
+                <td colSpan={displayCols.length + 1}>
+                  <div className="empty-state table-empty">
+                    <SearchX size={28} className="empty-icon" />
+                    <div className="empty-title">No results found</div>
+                    <div className="empty-desc">
+                      {search ? `No records match "${search}" — try a different search term.` : 'No records match the current filters.'}
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            )}
             {pageData.map((row, i) => (
               <tr key={row[primaryKey] ?? i} onClick={() => onSelectRow(row)} className="table-row">
                 {displayCols.map(col => (
