@@ -2,7 +2,7 @@
 
 An interactive cybersecurity training platform built on anonymized operational data from a real Managed Security Service Provider (MSSP). Explore incidents, vulnerabilities, SLA contracts, and analyst workflows — and use AI to understand what it all means.
 
-**Live site:** [your-site.netlify.app](https://your-site.netlify.app) <!-- replace with your actual URL -->
+**Live site:** [https://cyberdatasetanalytics.netlify.app/]((https://cyberdatasetanalytics.netlify.app/)) <!-- replace with your actual URL -->
 
 ---
 
