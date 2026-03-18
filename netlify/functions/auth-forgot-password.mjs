@@ -1,5 +1,5 @@
 import { neon } from '@netlify/neon';
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 import { randomBytes } from 'crypto';
 
 export const handler = async (event) => {
@@ -47,10 +47,16 @@ export const handler = async (event) => {
   const siteUrl = process.env.URL || 'http://localhost:5173';
   const resetUrl = `${siteUrl}/?reset_token=${token}&email=${encodeURIComponent(email)}`;
 
-  const resend = new Resend(process.env.RESEND_API_KEY);
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_APP_PASSWORD,
+    },
+  });
 
-  await resend.emails.send({
-    from: 'BCS CyberLab <onboarding@resend.dev>',
+  await transporter.sendMail({
+    from: `BCS CyberLab <${process.env.GMAIL_USER}>`,
     to: email,
     subject: 'Reset your BCS CyberLab password',
     html: `
