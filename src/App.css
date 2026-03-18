@@ -955,7 +955,7 @@ body {
   z-index: 1000;
 }
 .admin-panel {
-  background: var(--surface);
+  background: var(--bg2);
   border: 1px solid var(--border);
   border-radius: 10px;
   width: 440px;
