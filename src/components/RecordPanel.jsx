@@ -86,7 +86,7 @@ export default function RecordPanel({ record, tableLabel, tableDescription, onCl
       if (!res.ok) throw new Error(`NVD API responded with HTTP ${res.status}`);
       const json = await res.json();
       const item = json?.vulnerabilities?.[0]?.cve;
-      if (!item) throw new Error('CVE not found in NVD database');
+      if (!item) throw new Error(`${cveId} was not found in NVD. This dataset uses anonymized placeholder CVE IDs that do not correspond to real NVD entries.`);
       setNvdData(item);
     } catch (e) {
       setNvdError(e.message || 'Failed to fetch CVE data');
@@ -143,6 +143,18 @@ export default function RecordPanel({ record, tableLabel, tableDescription, onCl
             <div className="explain-error">
               <AlertCircle size={14} style={{ display: 'inline', marginRight: 6, verticalAlign: 'middle' }} />
               {nvdError}
+              {record?.VulnName && (
+                <div style={{ marginTop: 8 }}>
+                  <a
+                    href={`https://nvd.nist.gov/vuln/search/results?query=${encodeURIComponent(record.VulnName)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: 'var(--cyan)', fontSize: '0.78rem' }}
+                  >
+                    Search NVD for "{record.VulnName}" →
+                  </a>
+                </div>
+              )}
             </div>
           )}
 
