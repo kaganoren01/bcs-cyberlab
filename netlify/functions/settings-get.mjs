@@ -15,7 +15,9 @@ export const handler = async () => {
     `;
 
     const rows = await sql`SELECT value FROM settings WHERE key = 'allowed_domains'`;
-    const domains = rows.length > 0 ? JSON.parse(rows[0].value) : DEFAULT_DOMAINS;
+    const parsed = rows.length > 0 ? JSON.parse(rows[0].value) : DEFAULT_DOMAINS;
+    // Fall back to defaults if the stored list is empty (prevents accidental lockout)
+    const domains = Array.isArray(parsed) && parsed.length > 0 ? parsed : DEFAULT_DOMAINS;
 
     return {
       statusCode: 200,
