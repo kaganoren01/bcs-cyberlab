@@ -1,4 +1,5 @@
 /* Global resets — app styles are in App.css */
 *, *::before, *::after { box-sizing: border-box; }
+html { color-scheme: dark; }
 body { margin: 0; }
 #root { height: 100vh; }

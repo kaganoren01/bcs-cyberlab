@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   LayoutDashboard, ShieldAlert, Bell, Bug,
   Ticket, Server, Link2, Users, Building2,
   FileText, Radio, GitMerge, UserCheck, ContactRound,
-  BarChart2, LogOut, Settings, Info,
+  BarChart2, LogOut, Settings, Info, Menu, X,
 } from 'lucide-react';
 import { TABLES, PRIMARY_TABLES, REFERENCE_TABLES } from './utils/schema';
 import Dashboard from './components/Dashboard';
@@ -31,19 +31,54 @@ const TABLE_ICONS = {
   CLIENT_CONTACT:   ContactRound,
 };
 
+const MOBILE_NAV_BREAKPOINT = 768;
+
 export default function App() {
   const { isAuthenticated, email, isAdmin, token, login, logout } = useAuth();
   const [activeView, setActiveView] = useState('dashboard');
   const [showAdmin, setShowAdmin] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
+  useEffect(() => {
+    if (!mobileNavOpen) return;
+    const onKey = (e) => {
+      if (e.key === 'Escape') setMobileNavOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [mobileNavOpen]);
+
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth > MOBILE_NAV_BREAKPOINT) setMobileNavOpen(false);
+    };
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   if (!isAuthenticated) return <LoginPage onLogin={login} />;
 
+  function goTo(view) {
+    setActiveView(view);
+    setMobileNavOpen(false);
+  }
+
   return (
-    <div className="app">
+    <div className={`app${mobileNavOpen ? ' app--nav-open' : ''}`}>
       {showAdmin && <AdminPanel token={token} onClose={() => setShowAdmin(false)} />}
       <header className="app-header">
         <div className="header-inner">
-          <button className="logo" onClick={() => setActiveView('dashboard')}>
+          <button
+            type="button"
+            className="mobile-nav-toggle"
+            aria-expanded={mobileNavOpen}
+            aria-controls="app-sidebar"
+            aria-label={mobileNavOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            onClick={() => setMobileNavOpen((o) => !o)}
+          >
+            {mobileNavOpen ? <X size={20} strokeWidth={2} /> : <Menu size={20} strokeWidth={2} />}
+          </button>
+          <button type="button" className="logo" onClick={() => goTo('dashboard')}>
             <span className="logo-bracket">[</span>
             CDA
             <span className="logo-bracket">]</span>
@@ -54,35 +89,41 @@ export default function App() {
         <div className="header-user">
           <span className="header-email">{email}</span>
           {isAdmin && (
-            <button className="admin-btn" onClick={() => setShowAdmin(true)} title="Admin Settings">
+            <button type="button" className="admin-btn" onClick={() => setShowAdmin(true)} title="Admin Settings">
               <Settings size={14} />
             </button>
           )}
-          <button className="logout-btn" onClick={logout} title="Sign out">
-            <LogOut size={14} /> Sign out
+          <button type="button" className="logout-btn" onClick={logout} title="Sign out">
+            <LogOut size={14} /> <span className="logout-btn-text">Sign out</span>
           </button>
         </div>
       </header>
 
       <div className="app-body">
-        <nav className="sidebar">
+        <nav
+          id="app-sidebar"
+          className={`sidebar${mobileNavOpen ? ' sidebar--open' : ''}`}
+        >
           <button
+            type="button"
             className={`nav-item nav-dashboard ${activeView === 'dashboard' ? 'active' : ''}`}
-            onClick={() => setActiveView('dashboard')}
+            onClick={() => goTo('dashboard')}
           >
             <LayoutDashboard size={15} className="nav-icon" />
             Dashboard
           </button>
           <button
+            type="button"
             className={`nav-item nav-dashboard ${activeView === 'analytics' ? 'active' : ''}`}
-            onClick={() => setActiveView('analytics')}
+            onClick={() => goTo('analytics')}
           >
             <BarChart2 size={15} className="nav-icon" />
             Analytics
           </button>
           <button
+            type="button"
             className={`nav-item nav-dashboard ${activeView === 'about' ? 'active' : ''}`}
-            onClick={() => setActiveView('about')}
+            onClick={() => goTo('about')}
           >
             <Info size={15} className="nav-icon" />
             About
@@ -96,9 +137,10 @@ export default function App() {
               const Icon = TABLE_ICONS[key];
               return (
                 <button
+                  type="button"
                   key={key}
                   className={`nav-item ${activeView === key ? 'active' : ''}`}
-                  onClick={() => setActiveView(key)}
+                  onClick={() => goTo(key)}
                 >
                   {Icon && <Icon size={14} className="nav-icon" />}
                   {TABLES[key].label}
@@ -113,9 +155,10 @@ export default function App() {
               const Icon = TABLE_ICONS[key];
               return (
                 <button
+                  type="button"
                   key={key}
                   className={`nav-item ${activeView === key ? 'active' : ''}`}
-                  onClick={() => setActiveView(key)}
+                  onClick={() => goTo(key)}
                 >
                   {Icon && <Icon size={14} className="nav-icon" />}
                   {TABLES[key].label}
@@ -134,6 +177,15 @@ export default function App() {
             ? <AboutPage />
             : <TableView key={activeView} tableKey={activeView} table={TABLES[activeView]} />}
         </main>
+
+        {mobileNavOpen && (
+          <button
+            type="button"
+            className="mobile-nav-backdrop"
+            aria-label="Close navigation"
+            onClick={() => setMobileNavOpen(false)}
+          />
+        )}
       </div>
 
       <footer className="app-footer">
