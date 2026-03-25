@@ -41,7 +41,8 @@ Each section includes a reference banner citing the industry source that inspire
 
 | Layer | Technology |
 |---|---|
-| Frontend | React 18, Vite 8 (rolldown bundler) |
+| Frontend | React 19, Vite 8 (rolldown bundler) |
+| UI / Design | Custom CSS design system — glassmorphism, Inter + JetBrains Mono, CSS custom properties |
 | Charts | Recharts |
 | CSV parsing | PapaParse (client-side, no backend needed for data) |
 | Icons | lucide-react |
